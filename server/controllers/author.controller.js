@@ -16,7 +16,7 @@ getAllAuthors : (req, res) => {
 getAuthorById : (req, res) => {
     Author.findOne({_id : req.params.id})
     .then(oneAuthor => res.json(oneAuthor))
-    .catch(err => console.log(err))
+    .catch(err => res.status(400).json(err))
 },
 
 getAllAuthors : (req, res) => {

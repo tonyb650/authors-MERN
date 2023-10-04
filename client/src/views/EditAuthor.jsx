@@ -10,6 +10,7 @@ function EditAuthor(props) {
   const [lastName, setLastName] = useState("");
   const [errors, setErrors] = useState([]);
   const [authorLoaded, setAuthorLoaded] = useState(false);
+  const [getError, setGetError] = useState(""); // Initialize this in case of an error on our axios.get
 
   useEffect(() => {
     axios
@@ -19,9 +20,12 @@ function EditAuthor(props) {
         setLastName(oneAuthor.data.lastName);
         setAuthorLoaded(true); // this flag should trigger a re-render of the page now that we have our values set for our for fields
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setGetError(["We're sorry, but we could not find the author you are looking for. Would you like to add this author to our database?"])
+      });
   }, []);
-  console.log(id);
+  // console.log(id);
 
   function editAuthor(author) { // this function will be passed to the Form component through props
     axios
@@ -43,6 +47,9 @@ function EditAuthor(props) {
       <h1>Favorite authors</h1>
       <Link to="/authors">Home</Link>
       <h2>Edit author:</h2>
+      {getError && ( /* empty string will be falsey */
+        <p className="alert alert-danger">{getError} <Link to="/authors/new">Add Author</Link></p>
+      )}
       {authorLoaded && ( /* Logical AND operator here. "It works because in JavaScript, true && expression always evaluates to expression, and false && expression always evaluates to false." */
         <AuthorForm
           initialFirstName={firstName}
